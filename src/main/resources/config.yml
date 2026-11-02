@@ -1,0 +1,95 @@
+#   ____        _ _        _  ___ _
+#  / ___| _ __ (_) | _____| |/ (_) |_ ___
+#  \___ \| '_ \| | |/ / _ \ ' /| | __/ __|
+#   ___) | |_) | |   <  __/ . \| | |_\__ \
+#  |____/| .__/|_|_|\_\___|_|\_\_|\__|___/
+#        |_|
+
+# version: 1.0
+# support & bug report: https://discord.gg/EdD8tNnAD9
+# by Spike2701 (dc: itzz_sp1key)
+
+kits-menu:
+  title: "Zestawy"
+  rows: 5
+
+  close-button:
+    name: "&cZamknij"
+    material: barrier
+    amount: 1
+    slot: 40
+    lore: []
+
+  kit-lore:
+    - ""
+    - "&8» &7Ten kit można odbierać co: &f{cooldown}"
+    - "&8» &7Możesz odebrać {can-claim}"
+    - ""
+    - "&7Kliknij &fPPM&7, aby przejść do zestawu!"
+    - ""
+
+  can-claim:
+    available: "&aTAK &l✔"
+    no-permission: "&cNIE &4✘"
+    cooldown: "&7za: &c{formatted-time}"
+
+kit-preview:
+  title: "Zestawy"
+  rows: 5
+
+  back-button:
+    name: "&cPowrót!"
+    material: barrier
+    amount: 1
+    slot: 44
+    lore: []
+
+  claim-button:
+    slot: 43
+
+    can-claim:
+      name: "&aOdbierz zestaw"
+      material: lime_dye
+      amount: 1
+      lore:
+        - " &8» &7Kliknij &aLPM &7aby odebrać zestaw "
+
+    no-permission:
+      name: "&4Brak dostepu"
+      material: red_dye
+      amount: 1
+      lore:
+        - " &8» &7Nie posiadasz &cdostepu &7do tego zestawu!"
+
+    cooldown:
+      name: "&eOdbierz przedmioty z zestawu!"
+      material: orange_dye
+      amount: 1
+      lore:
+        - " &8» &7Nastepny raz możesz odebrać za &f{formatted-time}&7!"
+
+kit-claim:
+  title: "Odbierz przedmioty"
+  # rows will be set automatically
+
+messages:
+  claimed:
+    # {formatted-name} - ta sama nazwa co nazwa ikony kitu w menu kitów
+    chat: "&7Odebrano zestaw &f{formatted-name}&7"
+    title: ""
+    subtitle: "&7Odebrano zestaw &f{formatted-name}&7"
+
+  claimed-all:
+    chat: ""
+    title: ""
+    subtitle: "&aOdebrano wszystkie przedmioty"
+
+  no-permission:
+    chat: "&cBrak dostepu do zestawu..."
+    title: ""
+    subtitle: "&cBrak dostepu do zestawu..."
+
+  cooldown:
+    chat: "&7Odczekaj jeszcze &f{formatted-time}&7"
+    title: "&cPusto!"
+    subtitle: "&7Odczekaj jeszcze &f{formatted-time}&7"

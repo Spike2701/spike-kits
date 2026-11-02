@@ -1,0 +1,65 @@
+cooldown-in-seconds: 86400
+formatted-cooldown: "1d"
+
+icon:
+  name: "&6Zestaw GVIP"
+  material: netherite_pickaxe
+  amount: 1
+  slot: 24
+
+items:
+  - ==: org.bukkit.inventory.ItemStack
+    DataVersion: 5023
+    id: minecraft:diamond_helmet
+    count: 1
+    schema_version: 1
+  - ==: org.bukkit.inventory.ItemStack
+    DataVersion: 5023
+    id: minecraft:diamond_chestplate
+    count: 1
+    schema_version: 1
+  - ==: org.bukkit.inventory.ItemStack
+    DataVersion: 5023
+    id: minecraft:diamond_leggings
+    count: 1
+    schema_version: 1
+  - null
+  - ==: org.bukkit.inventory.ItemStack
+    DataVersion: 5023
+    id: minecraft:diamond_boots
+    count: 1
+    schema_version: 1
+  - ==: org.bukkit.inventory.ItemStack
+    DataVersion: 5023
+    id: minecraft:diamond_sword
+    count: 1
+    schema_version: 1
+  - ==: org.bukkit.inventory.ItemStack
+    DataVersion: 5023
+    id: minecraft:diamond_axe
+    count: 1
+    schema_version: 1
+  - ==: org.bukkit.inventory.ItemStack
+    DataVersion: 5023
+    id: minecraft:dirt
+    count: 64
+    schema_version: 1
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null

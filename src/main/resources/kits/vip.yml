@@ -1,0 +1,61 @@
+cooldown-in-seconds: 86400
+formatted-cooldown: "1d"
+
+icon:
+  name: "&eZestaw VIP"
+  material: iron_pickaxe
+  amount: 1
+  slot: 21
+
+items:
+  - ==: org.bukkit.inventory.ItemStack
+    DataVersion: 5023
+    id: minecraft:iron_helmet
+    count: 1
+    schema_version: 1
+  - ==: org.bukkit.inventory.ItemStack
+    DataVersion: 5023
+    id: minecraft:iron_chestplate
+    count: 1
+    schema_version: 1
+  - ==: org.bukkit.inventory.ItemStack
+    DataVersion: 5023
+    id: minecraft:iron_leggings
+    count: 1
+    schema_version: 1
+  - ==: org.bukkit.inventory.ItemStack
+    DataVersion: 5023
+    id: minecraft:iron_boots
+    count: 1
+    schema_version: 1
+  - ==: org.bukkit.inventory.ItemStack
+    DataVersion: 5023
+    id: minecraft:iron_sword
+    count: 1
+    schema_version: 1
+  - ==: org.bukkit.inventory.ItemStack
+    DataVersion: 5023
+    id: minecraft:iron_axe
+    count: 1
+    schema_version: 1
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null

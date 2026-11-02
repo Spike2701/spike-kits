@@ -1,0 +1,45 @@
+cooldown-in-seconds: 60
+formatted-cooldown: "1m"
+
+icon:
+  name: "&fZestaw gracza"
+  material: wooden_pickaxe
+  amount: 1
+  slot: 20
+
+items:
+  - ==: org.bukkit.inventory.ItemStack
+    DataVersion: 5023
+    id: minecraft:iron_pickaxe
+    count: 1
+    schema_version: 1
+  - ==: org.bukkit.inventory.ItemStack
+    DataVersion: 5023
+    id: minecraft:cooked_porkchop
+    count: 16
+    schema_version: 1
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
+  - null
