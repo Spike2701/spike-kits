@@ -7,14 +7,14 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 public class CooldownManager {
-    private final SpikeKits pl;
+    private final SpikeKits plugin;
 
-    public CooldownManager(SpikeKits pl) {
-        this.pl = pl;
+    public CooldownManager(SpikeKits plugin) {
+        this.plugin = plugin;
     }
 
     public NamespacedKey key(String kitName) {
-        return new NamespacedKey(pl, "spike-kits_kit_" + kitName + "_cooldown");
+        return new NamespacedKey(plugin, "kit_" + kitName + "_cooldown");
     }
 
     public void setCooldown(String kitName, Player player, long duration) {

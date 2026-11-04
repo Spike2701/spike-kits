@@ -4,6 +4,8 @@ version: '${version}'
 main: dev.spike.spikeKits.SpikeKits
 api-version: '26.3'
 load: POSTWORLD
+author: Spike2701
+website:
 
 permissions:
   spike-kits.command.kit:

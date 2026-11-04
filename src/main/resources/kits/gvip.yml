@@ -2,7 +2,7 @@ cooldown-in-seconds: 86400
 formatted-cooldown: "1d"
 
 icon:
-  name: "&6Zestaw GVIP"
+  name: "<gold>Zestaw GVIP"
   material: netherite_pickaxe
   amount: 1
   slot: 24

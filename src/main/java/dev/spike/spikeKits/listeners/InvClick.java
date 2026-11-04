@@ -1,14 +1,13 @@
 package dev.spike.spikeKits.listeners;
 
+import dev.spike.spikeKits.Kit;
 import dev.spike.spikeKits.utils.CooldownManager;
 import dev.spike.spikeKits.SpikeKits;
 import dev.spike.spikeKits.inventoryHolders.ClaimItems;
 import dev.spike.spikeKits.inventoryHolders.KitPreview;
 import dev.spike.spikeKits.inventoryHolders.KitsMenu;
+import dev.spike.spikeKits.utils.Messages;
 import dev.spike.spikeKits.utils.RemainingItemsManager;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.title.Title;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,18 +15,21 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.io.File;
 import java.util.HashMap;
 
-public class InvClick implements Listener {
-    private final SpikeKits pl;
-    private final CooldownManager cm;
-    private final RemainingItemsManager rim;
+import static dev.spike.spikeKits.utils.Messages.formatTime;
 
-    public InvClick(SpikeKits pl, CooldownManager cm, RemainingItemsManager rim) {
-        this.pl = pl;
-        this.cm = cm;
-        this.rim = rim;
+public class InvClick implements Listener {
+    private final SpikeKits plugin;
+    private final CooldownManager cooldownManager;
+    private final RemainingItemsManager remainingItemsManager;
+    private final Messages messages;
+
+    public InvClick(SpikeKits plugin) {
+        this.plugin = plugin;
+        this.cooldownManager = plugin.getCooldownManager();
+        this.remainingItemsManager = plugin.getRemainingItemsManager();
+        this.messages = plugin.getMessages();
     }
 
     @EventHandler
@@ -38,10 +40,10 @@ public class InvClick implements Listener {
         if (e.getInventory().getHolder() instanceof KitsMenu) {
             e.setCancelled(true);
 
-            if (slot == pl.getCloseButtonSlot()) {
-                pl.getServer().getScheduler().runTask(pl, () -> player.closeInventory());
-            } else if (pl.getKitsNames().containsKey(slot) && !pl.getKitsNames().get(slot).equals("decoration")) {
-                pl.getServer().getScheduler().runTask(pl, () -> player.openInventory(new KitPreview(player, pl.getKitsNames().get(slot), cm, pl).getInventory()));
+            if (slot == messages.CLOSE_BUTTON_SLOT) {
+                plugin.getServer().getScheduler().runTask(plugin, () -> player.closeInventory());
+            } else if (plugin.getKits().containsKey(slot)) {
+                plugin.getServer().getScheduler().runTask(plugin, () -> player.openInventory(new KitPreview(player, slot, plugin).getInventory()));
             }
 
 
@@ -49,27 +51,28 @@ public class InvClick implements Listener {
         } else if (e.getInventory().getHolder() instanceof KitPreview kitPreview) {
             e.setCancelled(true);
 
-            if (slot == pl.getBackButtonSlot()) {
-                pl.getServer().getScheduler().runTask(pl, () -> player.openInventory(new KitsMenu(player, cm, pl).getInventory()));
+            if (slot == messages.BACK_BUTTON_SLOT) {
+                plugin.getServer().getScheduler().runTask(plugin, () -> player.openInventory(new KitsMenu(player, plugin).getInventory()));
 
-            } else if (slot == pl.getClaimButtonSlot()) {
-                String kitName = kitPreview.getKitName().replace(".yml", "");
-                String formattedTime = pl.formatTime(kitName, player);
+            } else if (slot == messages.CLAIM_BUTTON_SLOT) {
+                int slotInKitsMenu = kitPreview.getSlotInKitsMenu();
+                Kit kit = plugin.getKits().get(slotInKitsMenu);
 
-                YamlConfiguration yaml = YamlConfiguration.loadConfiguration(new File(pl.getDataFolder(), "kits/" + kitName + ".yml"));
-                String formattedKitName = yaml.getString("icon.name", "failed to load icon.name");
-                long cooldown = yaml.getLong("cooldown-in-seconds", 60) * 1000;
+                String kitName = kit.getName();
+                String formattedTime = formatTime(cooldownManager.getRemaining(kitName, player));
+                String formattedKitName = kit.getDisplayName();
+                long cooldown = kit.getCooldown();
 
-                if (!player.hasPermission("spike-kits.kit." + kitName)) {
-                    sendMessagesAndTrigger(player, "no-permission", formattedKitName, formattedTime, kitName);
-                } else if (cm.getRemaining(kitName, player) == 0) {
-                    sendMessagesAndTrigger(player, "claimed", formattedKitName, formattedTime, kitName);
-                    cm.setCooldown(kitName, player, cooldown);
+                if (!player.hasPermission(kit.getPermission())) {
+                    messages.claimButtonClickedAction(player, "no-permission", formattedKitName, formattedTime, slotInKitsMenu);
+                } else if (cooldownManager.getRemaining(kitName, player) == 0) {
+                    messages.claimButtonClickedAction(player, "claimed", formattedKitName, formattedTime, slotInKitsMenu);
+                    cooldownManager.setCooldown(kitName, player, cooldown);
                 } else {
-                    if (rim.hasNotClaimedItems(player.getUniqueId(), kitName)) {
-                        pl.getServer().getScheduler().runTask(pl, () -> player.openInventory(rim.getNotClaimedItems(player.getUniqueId(), kitName)));
+                    if (remainingItemsManager.hasNotClaimedItems(player.getUniqueId(), kitName)) {
+                        plugin.getServer().getScheduler().runTask(plugin, () -> player.openInventory(remainingItemsManager.getNotClaimedItems(player.getUniqueId(), kitName)));
                     } else {
-                        sendMessagesAndTrigger(player, "cooldown", formattedKitName, formattedTime, kitName);
+                        messages.claimButtonClickedAction(player, "cooldown", formattedKitName, formattedTime, slotInKitsMenu);
                     }
                 }
             }
@@ -84,7 +87,7 @@ public class InvClick implements Listener {
                 ItemStack clickedItem = e.getCurrentItem();
                 if (clickedItem == null || clickedItem.getType().isAir()) return;
 
-                clickedInv.setItem(e.getRawSlot(), null);
+                clickedInv.setItem(slot, null);
                 HashMap<Integer, ItemStack> itemsIfFullInv = player.getInventory().addItem(clickedItem.clone());
                 if (!itemsIfFullInv.isEmpty()) {
                     player.getWorld().dropItemNaturally(player.getLocation(), itemsIfFullInv.get(0));
@@ -92,39 +95,11 @@ public class InvClick implements Listener {
                 claimItems.subtrackOneItem();
 
                 if (claimItems.getItemsQuantity() == 0) {
-                    sendMessagesAndTrigger(player, "claimed-all", "", "", claimItems.getKitName());
+                    messages.claimButtonClickedAction(player, "claimed-all", "", "", slot);
                 } else {
                     player.playSound(player.getLocation(), "entity.item.pickup", 1.0f, 1.0f);
                 }
             }
         }
-    }
-
-    private void sendMessagesAndTrigger(Player player, String type, String formattedKitName, String formattedTime, String kitName) {
-        Component message = formatAndReplace(pl, "messages." + type + ".chat", formattedKitName, formattedTime);
-        if (!message.equals(Component.text(""))) player.sendMessage(message);
-
-        Component title = formatAndReplace(pl, "messages." + type + ".title", formattedKitName, formattedTime);
-        Component subtitle = formatAndReplace(pl, "messages." + type + ".subtitle", formattedKitName, formattedTime);
-        player.showTitle(Title.title(title, subtitle));
-
-        if (type.equals("claimed")) {
-            player.playSound(player.getLocation(), "entity.player.levelup", 1.0f, 1.0f);
-            pl.getServer().getScheduler().runTask(pl, () -> player.openInventory(new ClaimItems(kitName, pl).getInventory()));
-        } else if (type.equals("claimed-all")){
-            player.playSound(player.getLocation(), "block.chest.close", 1.0f, 1.0f);
-            pl.getServer().getScheduler().runTask(pl, () -> player.closeInventory());
-        } else {
-            player.playSound(player.getLocation(), "entity.villager.no", 1.0f, 1.0f);
-            pl.getServer().getScheduler().runTask(pl, () -> player.closeInventory());
-        }
-    }
-
-    private Component formatAndReplace(SpikeKits pl, String path, String formattedKitName, String formattedTime) {
-        String text = pl.getConfig().getString(path, "failed to load " + path);
-
-        if (text.isEmpty()) return Component.text("");
-
-        return pl.format(text.replace("{formatted-time}", formattedTime).replace("{formatted-name}", formattedKitName));
     }
 }

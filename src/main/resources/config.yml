@@ -14,7 +14,7 @@ kits-menu:
   rows: 5
 
   close-button:
-    name: "&cZamknij"
+    name: "<red>Zamknij"
     material: barrier
     amount: 1
     slot: 40
@@ -22,23 +22,23 @@ kits-menu:
 
   kit-lore:
     - ""
-    - "&8» &7Ten kit można odbierać co: &f{cooldown}"
-    - "&8» &7Możesz odebrać {can-claim}"
+    - "<dark_gray>» <gray>Ten kit można odbierać co: <white><cooldown>"
+    - "<dark_gray>» <gray>Możesz odebrać <can-claim>"
     - ""
-    - "&7Kliknij &fPPM&7, aby przejść do zestawu!"
+    - "<gray>Kliknij <white>PPM<gray>, aby przejść do zestawu!"
     - ""
 
   can-claim:
-    available: "&aTAK &l✔"
-    no-permission: "&cNIE &4✘"
-    cooldown: "&7za: &c{formatted-time}"
+    available: "<green>TAK <bold>✔"
+    no-permission: "<red>NIE <dark_red>✘"
+    cooldown: "<gray>za: <red><formatted-time>"
 
 kit-preview:
   title: "Zestawy"
   rows: 5
 
   back-button:
-    name: "&cPowrót!"
+    name: "<red>Powrót!"
     material: barrier
     amount: 1
     slot: 44
@@ -48,48 +48,48 @@ kit-preview:
     slot: 43
 
     can-claim:
-      name: "&aOdbierz zestaw"
+      name: "<green>Odbierz zestaw"
       material: lime_dye
       amount: 1
       lore:
-        - " &8» &7Kliknij &aLPM &7aby odebrać zestaw "
+        - " <dark_gray>» <gray>Kliknij <green>LPM <gray>aby odebrać zestaw "
 
     no-permission:
-      name: "&4Brak dostepu"
+      name: "<dark_red>Brak dostepu"
       material: red_dye
       amount: 1
       lore:
-        - " &8» &7Nie posiadasz &cdostepu &7do tego zestawu!"
+        - " <dark_gray>» <gray>Nie posiadasz <red>dostepu <gray>do tego zestawu!"
 
     cooldown:
-      name: "&eOdbierz przedmioty z zestawu!"
+      name: "<yellow>Odbierz przedmioty z zestawu!"
       material: orange_dye
       amount: 1
       lore:
-        - " &8» &7Nastepny raz możesz odebrać za &f{formatted-time}&7!"
+        - " <dark_gray>» <gray>Nastepny raz możesz odebrać za <white><formatted-time><gray>!"
 
-kit-claim:
+claim-items:
   title: "Odbierz przedmioty"
-  # rows will be set automatically
+  # rozmiar gui jest ustawiany automatycznie na tyle rzędów ile jest itemów
 
 messages:
   claimed:
-    # {formatted-name} - ta sama nazwa co nazwa ikony kitu w menu kitów
-    chat: "&7Odebrano zestaw &f{formatted-name}&7"
+    # <formatted-name> - ta sama nazwa co nazwa ikony kitu w menu kitów
+    chat: "<gray>Odebrano zestaw <white><formatted-name><gray>"
     title: ""
-    subtitle: "&7Odebrano zestaw &f{formatted-name}&7"
+    subtitle: "<gray>Odebrano zestaw <white><formatted-name><gray>"
 
   claimed-all:
     chat: ""
     title: ""
-    subtitle: "&aOdebrano wszystkie przedmioty"
+    subtitle: "<green>Odebrano wszystkie przedmioty"
 
   no-permission:
-    chat: "&cBrak dostepu do zestawu..."
+    chat: "<red>Brak dostepu do zestawu..."
     title: ""
-    subtitle: "&cBrak dostepu do zestawu..."
+    subtitle: "<red>Brak dostepu do zestawu..."
 
   cooldown:
-    chat: "&7Odczekaj jeszcze &f{formatted-time}&7"
-    title: "&cPusto!"
-    subtitle: "&7Odczekaj jeszcze &f{formatted-time}&7"
+    chat: "<gray>Odczekaj jeszcze <white><formatted-time><gray>"
+    title: "<red>Pusto!"
+    subtitle: "<gray>Odczekaj jeszcze <white><formatted-time><gray>"

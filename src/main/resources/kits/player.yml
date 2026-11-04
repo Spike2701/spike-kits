@@ -2,7 +2,7 @@ cooldown-in-seconds: 60
 formatted-cooldown: "1m"
 
 icon:
-  name: "&fZestaw gracza"
+  name: "<white>Zestaw gracza"
   material: wooden_pickaxe
   amount: 1
   slot: 20

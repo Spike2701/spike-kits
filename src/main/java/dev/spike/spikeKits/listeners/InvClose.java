@@ -17,29 +17,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InvClose implements Listener {
-    private final SpikeKits pl;
-    private final RemainingItemsManager rim;
+    private final SpikeKits plugin;
+    private final RemainingItemsManager remainingItemsManager;
 
-    public InvClose(SpikeKits pl, RemainingItemsManager rim) {
-        this.pl = pl;
-        this.rim = rim;
+    public InvClose(SpikeKits plugin) {
+        this.plugin = plugin;
+        this.remainingItemsManager = plugin.getRemainingItemsManager();
     }
 
     @EventHandler
     public void onClose(InventoryCloseEvent e) {
         if (e.getInventory().getHolder() instanceof ClaimItems claimItems) {
             Player player = (Player) e.getPlayer();
-            String kitName = claimItems.getKitName();
+            String kitName = plugin.getKits().get(claimItems.getSlotInKitsMenu()).getName();
 
             if (claimItems.getItemsQuantity() == 0) {
-                rim.removePlayerWithNotClaimedItems(player.getUniqueId(), kitName);
+                remainingItemsManager.removePlayerWithNotClaimedItems(player.getUniqueId(), kitName);
                 return;
             }
-            rim.addPlayerWithNotClaimedItems(player.getUniqueId(), claimItems, kitName);
+            remainingItemsManager.addPlayerWithNotClaimedItems(player.getUniqueId(), claimItems, kitName);
 
 
         } else if (e.getInventory().getHolder() instanceof EditMenu) {
-            File file = new File(pl.getDataFolder(), "kits-menu.yml");
+            File file = new File(plugin.getDataFolder(), "kits-menu.yml");
             YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
 
             List<ItemStack> items = new ArrayList<>();
@@ -53,11 +53,11 @@ public class InvClose implements Listener {
             try {
                 yaml.save(file);
             } catch (IOException exception) {
-                pl.getLogger().severe("Failed to save kits-menu.yml: " + exception.getMessage());
+                plugin.getLogger().severe("Failed to save kits-menu.yml: " + exception.getMessage());
                 return;
             }
 
-            pl.reloadConfig();
+            plugin.reloadConfig();
         }
     }
 }

@@ -1,14 +1,13 @@
 package dev.spike.spikeKits.inventoryHolders;
 
+import dev.spike.spikeKits.Kit;
+import dev.spike.spikeKits.utils.Messages;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import org.apache.commons.lang3.time.DurationFormatUtils;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import dev.spike.spikeKits.utils.CooldownManager;
 import dev.spike.spikeKits.SpikeKits;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -17,49 +16,56 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import static dev.spike.spikeKits.utils.Messages.formatTime;
 
 public class KitsMenu implements InventoryHolder {
     private final Inventory inventory;
 
-    public KitsMenu(Player player, CooldownManager cm, SpikeKits pl){
-        FileConfiguration config = pl.getConfig();
+    public KitsMenu(Player player, SpikeKits plugin){
+        Messages messages = plugin.getMessages();
+        CooldownManager cooldownManager = plugin.getCooldownManager();
+        Map<Integer, Kit> kits = plugin.getKits();
+        Map<Integer, ItemStack> decorations = plugin.getDecorations();
 
-        inventory = Bukkit.createInventory(this, pl.getKitsMenuSlots(), pl.getKitsMenuTitle());
-        for (int slot : pl.getKitsMenuContents().keySet()) {
-            ItemStack kitIcon = pl.getKitsMenuContents().get(slot).clone();
+        inventory = Bukkit.createInventory(this, messages.KITS_MENU_SLOTS, messages.format(messages.KITS_MENU_TITLE));
 
-            String kitName = pl.getKitsNames().get(slot).replace(".yml", "");
-            if (kitName.equals("close-button") || kitName.equals("decoration")) {
-                inventory.setItem(slot, kitIcon);
-                continue;
-            }
-            String permission = "spike-kits.kit." + kitName;
+        // decorations
+        for (int slot : decorations.keySet()) {
+            ItemStack decoration = decorations.get(slot);
+            if (decoration != null) inventory.setItem(slot, decorations.get(slot));
+        }
+
+        // kits
+        for (int slot : kits.keySet()) {
+            Kit kit = kits.get(slot);
 
             String canClaim;
-            if (!player.hasPermission(permission)) {
-                canClaim = pl.getConfig().getString("kits-menu.can-claim.no-permission", "failed to load kits-menu.can-claim.no-permission in config.yml");
-            } else if (cm.getRemaining(kitName, player) == 0) {
-                canClaim = pl.getConfig().getString("kits-menu.can-claim.available", "failed to load kits-menu.can-claim.available in config.yml");
+            if (!player.hasPermission(kit.getPermission())) {
+                canClaim = messages.KIT_LORE_NO_PERMISSION;
+            } else if (cooldownManager.getRemaining(kit.getName(), player) == 0) {
+                canClaim = messages.KIT_LORE_AVAILABLE;
             } else {
-                canClaim = pl.getConfig().getString("kits-menu.can-claim.cooldown", "failed to load kits-menu.can-claim.cooldown in config.yml").replace("{formatted-time}",
-                        DurationFormatUtils.formatDuration(cm.getRemaining(kitName, player), "[d'd' H'h' m'm' s's']"));
+                canClaim = messages.KIT_LORE_COOLDOWN.replace("<formatted-time>",
+                        formatTime(cooldownManager.getRemaining(kit.getName(), player)));
             }
-
-            String formattedCooldown = PlainTextComponentSerializer.plainText().serialize(kitIcon.lore().getFirst());
 
             List<Component> formattedLore = new ArrayList<>();
-            for (String line : config.getStringList("kits-menu.kit-lore")){
-                formattedLore.add(formatLore(line, player, canClaim, formattedCooldown, config));
+            for (String line : messages.KIT_LORE){
+                formattedLore.add(messages.format(line, Placeholder.unparsed("cooldown", kit.getFormattedCooldown()),
+                        Placeholder.parsed("can-claim", canClaim)).decoration(TextDecoration.ITALIC, false));
             }
-            kitIcon.editMeta(meta -> meta.lore(formattedLore));
 
+            ItemStack kitIcon = kit.getIcon();
+            kitIcon.editMeta(meta -> meta.lore(formattedLore));
             inventory.setItem(slot, kitIcon);
         }
-    }
-    
-    private Component formatLore(String line, Player player, String canClaim, String formattedCooldown, FileConfiguration config) {
-        return LegacyComponentSerializer.legacyAmpersand().deserialize(line.replace("{can-claim}", canClaim)
-                .replace("{cooldown}", formattedCooldown)).decoration(TextDecoration.ITALIC, false);
+
+        // close button
+        if (messages.CLOSE_BUTTON_SLOT != -1) {
+            inventory.setItem(messages.CLOSE_BUTTON_SLOT, messages.CLOSE_BUTTON);
+        }
     }
 
     @Override

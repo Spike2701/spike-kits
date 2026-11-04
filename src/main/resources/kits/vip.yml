@@ -2,7 +2,7 @@ cooldown-in-seconds: 86400
 formatted-cooldown: "1d"
 
 icon:
-  name: "&eZestaw VIP"
+  name: "<yellow>Zestaw VIP"
   material: iron_pickaxe
   amount: 1
   slot: 21
