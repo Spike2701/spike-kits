@@ -41,7 +41,7 @@ public class SpikeKitsCommand {
 
                 .then(Commands.literal("reload")
                         .executes(context -> {
-                            plugin.reloadConfig();
+                            plugin.reloadAll();
                             return messages.sendMessage(context, messages.RELOADED);
                         }))
 
@@ -126,7 +126,7 @@ public class SpikeKitsCommand {
         try {
             yaml.save(file);
         } catch (IOException e) {
-            player.sendMessage(messages.format(messages.FAILED_TO_SAVE));
+            player.sendMessage(messages.FAILED_TO_SAVE);
             plugin.getLogger().severe("Failed to save kit " + name + ": " + e.getMessage());
             return 0;
         }
@@ -149,11 +149,11 @@ public class SpikeKitsCommand {
         File[] files = new File(plugin.getDataFolder(), "kits").listFiles();
 
         if(files == null || files.length == 0){
-            player.sendMessage(messages.format(messages.NO_AVAILABLE_KITS));
+            player.sendMessage(messages.NO_AVAILABLE_KITS);
             return 0;
         }
 
-        player.sendMessage(messages.format(messages.AVAILABLE_KITS));
+        player.sendMessage(messages.AVAILABLE_KITS);
         for(File file : files){
             player.sendMessage(messages.format(messages.KIT_IN_LIST, Placeholder.unparsed("name", file.getName())));
         }

@@ -46,10 +46,9 @@ public final class SpikeKits extends JavaPlugin {
         loadDecorations();
     }
 
-    @Override
-    public void reloadConfig() {
+    public void reloadAll() {
         super.reloadConfig();
-
+        messages.init();
         saveDefaultKits();
         loadKits();
         loadDecorations();

@@ -22,7 +22,7 @@ public class ClaimItems implements InventoryHolder {
         List<ItemStack> items = plugin.getKits().get(slotInKitsMenu).getItems();
         int rows = Math.max(1, (int) Math.ceil(items.size() / 9.0));
 
-        inventory = Bukkit.createInventory(this, rows * 9, messages.format(messages.CLAIM_ITEMS_TITLE));
+        inventory = Bukkit.createInventory(this, rows * 9, messages.CLAIM_ITEMS_TITLE);
 
         for (ItemStack item : items) {
             inventory.addItem(item.clone());

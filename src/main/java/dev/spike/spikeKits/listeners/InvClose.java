@@ -57,7 +57,7 @@ public class InvClose implements Listener {
                 return;
             }
 
-            plugin.reloadConfig();
+            plugin.reloadAll();
         }
     }
 }

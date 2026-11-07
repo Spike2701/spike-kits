@@ -27,7 +27,7 @@ public class KitPreview implements InventoryHolder {
         Kit kit = plugin.getKits().get(slotInKitsMenu);
         this.slotInKitsMenu = slotInKitsMenu;
 
-        inventory = Bukkit.createInventory(this, messages.KIT_PREVIEW_SLOTS, messages.format(messages.KIT_PREVIEW_TITLE));
+        inventory = Bukkit.createInventory(this, messages.KIT_PREVIEW_SLOTS, messages.KIT_PREVIEW_TITLE);
 
         // kit items
         for (ItemStack item : kit.getItems()) {
@@ -44,18 +44,21 @@ public class KitPreview implements InventoryHolder {
         } else if (cooldownManager.getRemaining(kit.getName(), player) == 0) {
             claimButton = messages.CLAIM_BUTTON_AVAILABLE;
         } else {
-            claimButton = messages.CLAIM_BUTTON_COOLDOWN;
+            claimButton = messages.CLAIM_BUTTON_COOLDOWN.clone();
             List<Component> lore = claimButton.lore();
-            if (lore == null) return;
 
-            List<Component> formattedLore = new ArrayList<>();
-            for (Component line : lore){
-                formattedLore.add(line.replaceText(config -> {
-                    config.match("<formatted-time>");
-                    config.replacement(formatTime(cooldownManager.getRemaining(kit.getName(), player)));
-                }));
+            if (lore != null) {
+                Component formattedTime = Component.text(formatTime(cooldownManager.getRemaining(kit.getName(), player)));
+
+                List<Component> formattedLore = new ArrayList<>();
+                for (Component line : lore) {
+                    formattedLore.add(line.replaceText(config -> {
+                        config.matchLiteral("<formatted-time>");
+                        config.replacement(formattedTime);
+                    }));
+                }
+                claimButton.editMeta(meta -> meta.lore(formattedLore));
             }
-            claimButton.editMeta(meta -> meta.lore(formattedLore));
         }
 
 

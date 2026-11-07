@@ -29,7 +29,7 @@ public class KitsMenu implements InventoryHolder {
         Map<Integer, Kit> kits = plugin.getKits();
         Map<Integer, ItemStack> decorations = plugin.getDecorations();
 
-        inventory = Bukkit.createInventory(this, messages.KITS_MENU_SLOTS, messages.format(messages.KITS_MENU_TITLE));
+        inventory = Bukkit.createInventory(this, messages.KITS_MENU_SLOTS, messages.KITS_MENU_TITLE);
 
         // decorations
         for (int slot : decorations.keySet()) {
@@ -41,20 +41,20 @@ public class KitsMenu implements InventoryHolder {
         for (int slot : kits.keySet()) {
             Kit kit = kits.get(slot);
 
-            String canClaim;
+            Component canClaim;
             if (!player.hasPermission(kit.getPermission())) {
                 canClaim = messages.KIT_LORE_NO_PERMISSION;
             } else if (cooldownManager.getRemaining(kit.getName(), player) == 0) {
                 canClaim = messages.KIT_LORE_AVAILABLE;
             } else {
-                canClaim = messages.KIT_LORE_COOLDOWN.replace("<formatted-time>",
-                        formatTime(cooldownManager.getRemaining(kit.getName(), player)));
+                canClaim = messages.format(messages.KIT_LORE_COOLDOWN,
+                        Placeholder.unparsed("formatted-time", formatTime(cooldownManager.getRemaining(kit.getName(), player))));
             }
 
             List<Component> formattedLore = new ArrayList<>();
             for (String line : messages.KIT_LORE){
                 formattedLore.add(messages.format(line, Placeholder.unparsed("cooldown", kit.getFormattedCooldown()),
-                        Placeholder.parsed("can-claim", canClaim)).decoration(TextDecoration.ITALIC, false));
+                        Placeholder.component("can-claim", canClaim)).decoration(TextDecoration.ITALIC, false));
             }
 
             ItemStack kitIcon = kit.getIcon();
